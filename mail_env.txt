@@ -1,0 +1,21 @@
+for gmail: enable two factor auth -> generate app password -> use this app password as MAIL_PASSWORD on your .env
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USERNAME=appinion.tahmid@gmail.com
+MAIL_PASSWORD=smrubvonsbdlgxup
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=appinion.tahmid@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=67f672d306fcad
+MAIL_PASSWORD=d448f5308dc625
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=appinion.tahmid@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
