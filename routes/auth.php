@@ -5,35 +5,25 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordChangeController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-/* Route::get('/register', [RegisteredUserController::class, 'create'])
+Route::get('/register', [RegisteredUserController::class, 'create'])
                 ->middleware('guest')
                 ->name('register');
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->middleware('guest'); */
+                ->middleware('guest');
 
-Route::get('/login', [AuthenticatedSessionController::class, 'index'])
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
                 ->middleware('guest')
                 ->name('login');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'postLogin'])
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
                 ->middleware('guest');
 
-Route::get('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'create'])
-    ->middleware('guest')
-    ->name('password-reset.request');
-
-Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'store'])
-    ->middleware('guest')
-    ->name('password-reset.post');
-
-/*
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->middleware('guest')
                 ->name('password.request');
@@ -67,13 +57,8 @@ Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
                 ->name('password.confirm');
 
 Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
-                ->middleware('auth'); */
+                ->middleware('auth');
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'postLogout'])
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth')
                 ->name('logout');
-
-Route::middleware(['auth'])->group(function() {
-    Route::get('password-change', [PasswordChangeController::class, 'index'])->name('password-change.index');
-    Route::put('password-change', [PasswordChangeController::class, 'update'])->name('password-change.update');
-});

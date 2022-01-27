@@ -11,7 +11,12 @@ class DashboardController extends Controller
         //
     }
 
-    public function index(Request $request)
+    public function index()
+    {
+        return inertia('Dashboard/Index');
+    }
+
+    public function index1(Request $request)
     {
         $active_clients = 0;
         $active_clinicians = 0;

@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ env('APP_NAME') }} | @yield('title', 'Home')</title>
-    <!--<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />-->
-
-    <?php
-        /*header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
-        header('Pragma: no-cache');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');*/
-    ?>
 
     <meta name="description" content="PHWC Management Platform">
     <meta name="author" content="Appinion BD Ltd">
@@ -47,18 +38,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" id="css-main" href="{{ asset('theme/css/oneui.min.css') }}">
     <link rel="stylesheet" id="css-main" href="{{ asset('css/app.css') }}">
+    {{-- <script src="{{ asset('/js/app.js') }}" defer></script> --}}
 
     <!-- You can include a specific file from public/css/themes/ folder to alter the default color theme of the template. eg: -->
     {{-- <link rel="stylesheet" id="css-theme" href="{{ mix('/css/themes/amethyst.css') }}"> --}}
     @yield('styles')
 
-    <script src="{{ asset('js/alpine-2.8.1.min.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/alpine-2.8.1.min.js') }}" defer></script> --}}
 
 
     <!-- Scripts -->
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(),]) !!};</script>
+    @inertiaHead
 </head>
 <body>
+    @inertia
     <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed">
     {{-- <div id="page-container" class="sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed main-content-narrow"> --}}
 

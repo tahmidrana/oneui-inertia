@@ -29,14 +29,15 @@ class UserController extends Controller
     public function index()
     {
         view()->share('sub_menu', 'manage users');
-        return view('users.index');
+        return inertia('Users/Index');
     }
 
     public function create()
     {
         abort_unless(auth()->user()->can('user-create'), Response::HTTP_UNAUTHORIZED);
         view()->share('sub_menu', 'add new user');
-        return view('users.create', [
+
+        return inertia('Users/Create', [
             'user_types' => Role::where('slug', '!=', 'clinician')->active()->get(),
             'districts' => District::all()
         ]);
