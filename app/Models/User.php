@@ -26,14 +26,13 @@ class User extends Authenticatable
         'email',
         'gender',
         'dob',
-        'password',
-        'blood_group',
         'address',
         'phone',
         'photo',
         'joining_date',
         'employment_type',
         'is_active',
+        'password',
     ];
 
     /**
@@ -93,37 +92,9 @@ class User extends Authenticatable
         return "{$this->name} ($this->userid)";
     }
 
-    public function getBloodGroupTextAttribute()
-    {
-        return $this->blood_group
-            ? Config::get('constants.blood_groups')[$this->blood_group]
-            : 'N/A';
-    }
-
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id')->withPivot('is_primary');
     }
 
-    public function assigned_clients()
-    {
-        return $this->belongsToMany(Client::class, 'client_clinician_assigns', 'clinician_id', 'client_id')
-            ->withPivot(['assigned_by_user_id', 'assign_request_id', 'release_date']);
-    }
-
-    public function timeslots()
-    {
-        return $this->belongsToMany(Timeslot::class, 'clinician_timeslot')->withPivot('weekday');
-    }
-
-    public function clinical_sessions()
-    {
-        return $this->hasMany(ClinicalSession::class, 'host_clinician_id');
-    }
-
-    public function guest_sessions()
-    {
-        return $this->belongsToMany(ClinicalSession::class, 'clinical_session_guest_clinicians', 'clinician_id', 'clinical_session_id')
-            ->withPivot('clinician_id', 'accept_status', 'clinical_session_id');
-    }
 }

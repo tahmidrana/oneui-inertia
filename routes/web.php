@@ -54,6 +54,7 @@ Route::middleware([
     Route::get('users/{user}/password-reset', [UserController::class, 'passwordReset'])->name('users.password-reset');
     Route::get('users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
     Route::get('users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::get('users/get-users', [UserController::class, 'getUsers'])->name('users.get-users');
     Route::resource('users', UserController::class);
 
 
@@ -66,7 +67,6 @@ Route::middleware([
 
     Route::get('/users/set-user-type/{user_type}', [UserController::class, 'setUserType'])->name('set-user-type');
 
-    Route::get('/ajax/users/get-users', [UserController::class, 'getUsers'])->name('users.get-users');
 
     Route::prefix('admin-console')->group(function () {
         Route::resource('menus', MenuController::class)->only(['index', 'store', 'update', 'destroy']);

@@ -20,22 +20,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->nullable();
             $table->tinyInteger('gender')->nullable()->comment('1 - Male, 2 - Female, 3 - Other');
             $table->date('dob')->nullable();
-            $table->string('blood_group')->nullable();
             $table->string('address')->nullable();
-            $table->string('post_code')->nullable();
             $table->string('phone', 100)->nullable();
             $table->string('photo')->nullable();
 
-            $table->string('em_contact_name')->nullable()->comment('Emergency contact details');
-            $table->string('em_contact_relation')->nullable();
-            $table->string('em_contact_phone')->nullable();
-            $table->string('em_contact_email')->nullable();
-
             $table->date('joining_date')->nullable();
-            $table->string('last_educational_qual')->nullable();
-            $table->boolean('is_clinician')->default(false);
-            $table->unsignedSmallInteger('clinician_type')->nullable()->comment('1 - Counselor, 2 - Psychiatrist');
-            $table->unsignedInteger('supervisor_id')->nullable()->comment('Foreign Key: `users - id`');
             $table->unsignedSmallInteger('employment_type')->default(1)
                 ->comment('1 - Permanent, 2 - Part time, 3 - Contractual');
 

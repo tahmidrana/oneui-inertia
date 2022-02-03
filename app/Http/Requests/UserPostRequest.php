@@ -29,7 +29,6 @@ class UserPostRequest extends FormRequest
             'email' => 'string|nullable|email',
             'gender' => 'integer',
             'dob' => 'date_format:d-m-Y|nullable',
-            'blood_group' => 'integer|nullable',
             'address' => 'required|string',
             'phone' => 'required|string|size:11',
             'photo' => 'mimes:png,jpg,jpeg|max:2048|nullable',

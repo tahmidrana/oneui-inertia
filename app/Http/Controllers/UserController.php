@@ -39,13 +39,13 @@ class UserController extends Controller
 
         return inertia('Users/Create', [
             'user_types' => Role::where('slug', '!=', 'clinician')->active()->get(),
-            'districts' => District::all()
         ]);
     }
 
     public function store(UserPostRequest $request)
     {
         $data = $request->validated();
+        // dd($data);
         $data['password'] = Hash::make(env('USER_DEFAULT_PASSWORD'));
 
         try {
@@ -147,89 +147,33 @@ class UserController extends Controller
         $canActivation = auth()->user()->can('user-activation');
         // $canPasswordReset = auth()->user()->can('user-password-reset');
 
-        $status = request()->has('is_active') ? request()->is_active : 1;
+        $limit = request()->limit ?? 10;
+        $orderByCol = request()->orderBy ?? 'id';
+        $orderByDir = request()->ascending && request()->ascending == 1 ? 'asc' : 'desc';
+
         $users = User::query()
-            ->select(['id', 'name', 'userid', 'photo', 'last_login', 'joining_date', 'is_active'])
-            ->with([
+            // ->select(['id', 'name', 'userid', 'photo', 'last_login', 'joining_date', 'is_active'])
+            /* ->with([
                 'roles' => function ($q) {
                     $q->where('is_primary', 1)
                         ->select('roles.id', 'roles.title');
                 }
-            ])
-            ->where('is_active', $status)
-            ->where('is_clinician', 0)
-            ->when(request()->has('is_active'), function ($q) {
+            ]) */
+            ->when(request()->is_active, function ($q) {
                 return $q->where('is_active', request()->is_active);
             })
-            ->staff();
-
-        $result = DataTables::of($users)
-            ->addIndexColumn()
-            ->editColumn('photo', function ($row) {
-                if ($row->user_photo) {
-                    return "<img src='{$row->user_photo}' class='img-avatar img-avatar48' alt='Client Photo' />";
-                }
-                $firstChar = mb_substr($row->name, 0, 1, "UTF-8");
-                return "<p class='profile-icon bg-info'>{$firstChar}</p>";
+            ->when(request()->searchKey, function ($q) {
+                $search = request()->searchKey;
+                // $q->where('name', $search);
+                return $q
+                    ->where('name', 'like', "%{$search}%")
+                    ->orWhere('userid', 'like', "%{$search}%");
             })
-            ->editColumn('name', function ($row) {
-                return '<p class="font-w600 mb-0">
-                            <a href="'. route('users.show', ['user'=> $row->id]) .'">'. mb_substr($row->name, 0) .'</a>
-                        </p>
-                        <small class="text-muted mb-0">#'. $row->userid .'</small>';
-            })
-            ->addColumn('user_type', function ($row) {
-                return $row->roles->count() ? $row->roles[0]->title : '-';
-            })
-            ->editColumn('last_login', function ($row) {
-                return $row->last_login ? $row->last_login->format('d M Y h:i a') : '-';
-            })
-            ->editColumn('joining_date', function ($row) {
-                return $row->joining_date ? $row->joining_date->format('d M Y') : '-';
-            })
-            ->addColumn('status', function ($row) {
-                return $row->status;
-            })
-            ->addColumn('action', function ($row) use ($canView, $canEdit, $canActivation) {
-                $btn = '';
-
-                if ($canView) {
-                    $btn .= '<a href="'. route('users.show', ['user'=> $row->id]) .'"
-                        class="btn btn-sm btn-alt-info mr-1"
-                        title="View"><i class="fa fa-fw fa-eye"></i></a>';
-                }
-
-                if ($canEdit) {
-                    $btn .= '<a href="'. route('users.edit', ['user'=> $row->id]) .'"
-                        class="btn btn-sm btn-alt-info mr-1"
-                        title="Edit"><i class="fa fa-fw fa-pen"></i></a>';
-                }
-
-                if ($canActivation) {
-                    if ($row->is_active) {
-                        $btn .= '<a href="'. route('users.deactivate', ['user'=> $row->id]) .'"
-                            onClick="return confirmDeactivate()"
-                            class="btn btn-sm btn-alt-info mr-1"
-                            title="Deactivate"><i class="fa fa-fw fa-user-lock"></i></a>';
-                    } else {
-                        $btn .= '<a href="'. route('users.activate', ['user'=> $row->id]) .'"
-                            onClick="return confirmActivate()"
-                            class="btn btn-sm btn-alt-info mr-1"
-                            title="Activate"><i class="fa fa-fw fa-user-check"></i></a>';
-                    }
-                }
-
-                /* if ($canPasswordReset) {
-                    $btn .= '<a href="'. route('users.password-reset', ['user'=> $row->id]) .'"
-                        onClick="return confirmPasswordReset()"
-                        class="btn btn-sm btn-alt-info"
-                        title="Password Reset"><i class="fa fa-fw fa-fingerprint"></i></a>';
-                } */
-                return $btn;
-            })
-            ->rawColumns(['action', 'name', 'photo', 'status'])
-            ->make(true);
-        return $result;
+            ->staff()
+            ->orderBy($orderByCol, $orderByDir)
+            // ->simplePaginate(5);
+            ->paginate($limit);
+        return $users;
     }
 
     public function passwordReset(User $user)

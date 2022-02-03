@@ -11,6 +11,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import { Head } from "@inertiajs/inertia-vue3";
 
 export default {
+    name: 'Datatable',
     components: {
         BreezeAuthenticatedLayout,
         Head,
